@@ -1,0 +1,14 @@
+{
+  "name": "oseupsico-igt",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "." },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oseupsico-igt-db",
+      "database_id": "218ee16d-9c56-4b0a-bc7a-bbb5b55fa075"
+    }
+  ]
+}

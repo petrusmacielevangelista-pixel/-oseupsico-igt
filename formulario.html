@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dados do Participante · IGT · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">IGT</span>
+        </a>
+        <a href="/" class="navbar__back">← Voltar</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="form-section" style="min-height:calc(100vh - 140px);display:flex;align-items:center;">
+    <div class="container">
+      <div class="form-card">
+        <div class="form-card__title">Antes de começar</div>
+        <div class="form-card__sub">
+          Preencha seus dados para receber o resultado por e-mail ao final da tarefa.
+          Suas respostas são confidenciais.
+        </div>
+
+        <form id="form-cadastro" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" placeholder="Seu nome" autocomplete="given-name" />
+              <div class="form-group__error" id="erro-nome">Informe seu nome.</div>
+            </div>
+            <div class="form-group">
+              <label for="idade">Idade</label>
+              <input type="number" id="idade" placeholder="Ex: 28" min="10" max="110" />
+              <div class="form-group__error" id="erro-idade">Informe uma idade válida (10–110).</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" autocomplete="email" />
+            <div class="form-group__error" id="erro-email">Informe um e-mail válido.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="escolaridade">Escolaridade</label>
+            <select id="escolaridade" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-body);font-size:0.95rem;outline:none;background:var(--white);transition:border-color var(--transition);">
+              <option value="">Selecione…</option>
+              <option value="fundamental">Ensino Fundamental</option>
+              <option value="medio">Ensino Médio</option>
+              <option value="superior_incompleto">Superior Incompleto</option>
+              <option value="superior">Superior Completo</option>
+              <option value="pos">Pós-graduação / Mestrado / Doutorado</option>
+            </select>
+            <div class="form-group__error" id="erro-escolaridade">Selecione sua escolaridade.</div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <button type="submit" class="btn btn--yellow btn--full btn--lg">
+              Iniciar a tarefa →
+            </button>
+          </div>
+          <p class="form-disclaimer">
+            Ao continuar, você concorda que seus dados sejam usados exclusivamente
+            para envio do resultado e fins de pesquisa, de forma confidencial.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="logo" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__copy">© <span id="ano"></span> O Seu Psico.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('ano').textContent = new Date().getFullYear();
+
+    const escSelect = document.getElementById('escolaridade');
+    escSelect.addEventListener('focus', () => { escSelect.style.borderColor = 'var(--yellow)'; });
+    escSelect.addEventListener('blur',  () => { escSelect.style.borderColor = 'var(--border)'; });
+
+    document.getElementById('form-cadastro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let ok = true;
+
+      const nome = document.getElementById('nome').value.trim();
+      const idade = parseInt(document.getElementById('idade').value);
+      const email = document.getElementById('email').value.trim();
+      const escolaridade = escSelect.value;
+
+      function setErr(id, show) {
+        document.getElementById(id).classList.toggle('visible', show);
+        const input = document.getElementById(id.replace('erro-', ''));
+        if (input) input.classList.toggle('error', show);
+      }
+
+      if (!nome) { setErr('erro-nome', true); ok = false; } else setErr('erro-nome', false);
+      if (!idade || idade < 10 || idade > 110) { setErr('erro-idade', true); ok = false; } else setErr('erro-idade', false);
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('erro-email', true); ok = false; } else setErr('erro-email', false);
+      if (!escolaridade) { setErr('erro-escolaridade', true); ok = false; } else setErr('erro-escolaridade', false);
+
+      if (!ok) return;
+
+      sessionStorage.setItem('psico_igt_cadastro', JSON.stringify({ nome, idade, email, escolaridade }));
+      window.location.href = '/tarefa.html';
+    });
+  </script>
+</body>
+</html>

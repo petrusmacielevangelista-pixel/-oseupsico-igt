@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iowa Gambling Task · O Seu Psico</title>
+  <meta name="description" content="Realize o Iowa Gambling Task (IGT), tarefa clássica para avaliação da tomada de decisão e funções executivas." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">IGT</span>
+        </a>
+        <a href="https://oseupsico.com.br" class="navbar__back" target="_blank">← Voltar ao site</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__eyebrow">🃏 Tarefa de tomada de decisão</div>
+      <h1 class="hero__title">Iowa Gambling Task<br><mark>IGT</mark></h1>
+      <p class="hero__sub">
+        Uma tarefa clássica da neuropsicologia para avaliar como você toma decisões
+        sob incerteza — um processo fundamental às funções executivas.
+      </p>
+      <a href="#participar" class="btn btn--yellow btn--lg">Começar agora →</a>
+      <p class="hero__disclaimer" style="margin-top:20px;">
+        Instrumento de pesquisa. Não constitui diagnóstico clínico.
+        Suas respostas são confidenciais.
+      </p>
+    </div>
+  </section>
+
+  <!-- Informações -->
+  <section class="info-section" id="participar">
+    <div class="container">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card__icon">🃏</div>
+          <div class="info-card__title">4 baralhos</div>
+          <div class="info-card__text">
+            Você escolherá cartas de quatro baralhos (A, B, C e D).
+            Cada carta traz um ganho de dinheiro fictício e, às vezes, uma perda.
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">🔁</div>
+          <div class="info-card__title">100 tentativas</div>
+          <div class="info-card__text">
+            A tarefa tem 100 escolhas no total. Não há tempo limite por carta —
+            escolha no seu próprio ritmo.
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">📊</div>
+          <div class="info-card__title">Resultado ao final</div>
+          <div class="info-card__text">
+            Ao terminar, você verá seu escore IGT e uma interpretação sobre
+            seu padrão de tomada de decisão. O resultado também é enviado por e-mail.
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;max-width:720px;margin:0 auto 40px;">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:12px;">Como funciona?</h3>
+        <p style="font-size:0.92rem;color:var(--text-mid);line-height:1.75;">
+          Você começa com <strong>R$ 2.000</strong> (fictícios). A cada rodada, escolhe um baralho.
+          Alguns baralhos parecem vantajosos a curto prazo, mas levam a perdas a longo prazo.
+          O objetivo é maximizar o saldo — mas as regras <em>não são explicadas</em>: você deve descobri-las pelo comportamento.
+          Isso é justamente o que o IGT avalia.
+        </p>
+      </div>
+
+      <div class="info-cta">
+        <a href="formulario.html" class="btn btn--yellow btn--lg">Preencher dados e iniciar →</a>
+        <p class="info-cta__sub">Leva cerca de 10–15 minutos · Gratuito · Sem cadastro</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre a tarefa -->
+  <section style="background:var(--black);padding:64px 0;">
+    <div class="container" style="max-width:720px;text-align:center;">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:16px;">
+        Por que o IGT importa?
+      </h2>
+      <p style="font-size:0.95rem;color:rgba(255,255,255,0.6);line-height:1.8;margin-bottom:28px;">
+        Desenvolvido por Bechara, Damasio et al. (1994), o Iowa Gambling Task é um dos instrumentos
+        mais utilizados na neuropsicologia para avaliar a tomada de decisão.
+        Diferenças no desempenho são observadas em populações com lesão no córtex pré-frontal
+        ventromedial, uso de substâncias, comportamentos compulsivos e outros quadros clínicos.
+      </p>
+      <p style="font-size:0.78rem;color:rgba(255,255,255,0.3);line-height:1.6;">
+        Referência: Bechara, A., Damasio, A. R., Damasio, H., & Anderson, S. W. (1994).
+        Insensitivity to future consequences following damage to human prefrontal cortex.
+        <em>Cognition, 50</em>(1-3), 7-15.
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="logo" />
+          <span class="footer__logo-text">O Seu Psico <span style="color:var(--yellow);font-size:0.8rem;font-weight:500;">IGT</span></span>
+        </div>
+        <p class="footer__copy">© <span id="ano"></span> O Seu Psico. Todos os direitos reservados.</p>
+        <p class="footer__disclaimer">
+          Instrumento de pesquisa e rastreio. Não substitui avaliação psicológica profissional.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+backend:
+  name: github
+  repo: petrusmacielevangelista-pixel/oseupsico-igt
+  branch: master
+  base_url: https://igt.oseupsico.com.br
+
+media_folder: assets
+public_folder: /assets
+
+collections:
+  - name: configuracoes
+    label: Configurações do Site
+    files:
+
+      - name: geral
+        label: Geral
+        file: data/config.json
+        fields:
+          - { label: Nome do Site, name: nome_site, widget: string, default: "O Seu Psico · IGT" }
+          - { label: Descrição, name: descricao, widget: text }
+          - { label: URL Principal (oseupsico.com.br), name: url_principal, widget: string }
+          - label: Rodapé
+            name: rodape
+            widget: object
+            fields:
+              - { label: Texto de disclaimer, name: disclaimer, widget: text }
+
+      - name: landing
+        label: Página Inicial
+        file: data/landing.json
+        fields:
+          - label: Hero
+            name: hero
+            widget: object
+            fields:
+              - { label: Título, name: titulo, widget: string }
+              - { label: Subtítulo, name: subtitulo, widget: text }
+              - { label: Texto do botão CTA, name: cta_texto, widget: string }
+              - { label: Disclaimer abaixo do botão, name: disclaimer, widget: string }
+          - label: Cards de informação
+            name: cards
+            widget: list
+            fields:
+              - { label: Emoji / Ícone, name: icone, widget: string }
+              - { label: Título, name: titulo, widget: string }
+              - { label: Texto, name: texto, widget: text }
+          - label: Seção "Como funciona"
+            name: como_funciona
+            widget: object
+            fields:
+              - { label: Título, name: titulo, widget: string }
+              - { label: Texto, name: texto, widget: text }
+          - label: Seção "Por que importa"
+            name: por_que
+            widget: object
+            fields:
+              - { label: Título, name: titulo, widget: string }
+              - { label: Texto, name: texto, widget: text }
+              - { label: Referência bibliográfica, name: referencia, widget: text }
+
+      - name: tarefa
+        label: Tarefa (IGT)
+        file: data/tarefa.json
+        fields:
+          - { label: Instrução exibida durante a tarefa, name: instrucao, widget: text }
+          - { label: Saldo inicial (R$), name: saldo_inicial, widget: number, default: 2000 }
+
+      - name: resultado
+        label: Página de Resultado
+        file: data/resultado.json
+        fields:
+          - label: Interpretação — Padrão Vantajoso
+            name: interpretacao_good
+            widget: text
+          - label: Interpretação — Padrão Neutro
+            name: interpretacao_moderate
+            widget: text
+          - label: Interpretação — Padrão Desvantajoso
+            name: interpretacao_poor
+            widget: text
+          - label: Botão CTA
+            name: cta
+            widget: object
+            fields:
+              - { label: Texto, name: texto, widget: string }
+              - { label: URL, name: url, widget: string }
+
+      - name: email
+        label: E-mail de Resultado
+        file: data/email.json
+        fields:
+          - { label: Remetente (from), name: from, widget: string, default: "O Seu Psico IGT <igt@oseupsico.com.br>" }
+          - { label: Assunto, name: assunto, widget: string }
+          - label: Mensagem — Padrão Vantajoso
+            name: msg_good
+            widget: text
+          - label: Mensagem — Padrão Neutro
+            name: msg_moderate
+            widget: text
+          - label: Mensagem — Padrão Desvantajoso
+            name: msg_poor
+            widget: text
+          - { label: Texto do botão CTA no e-mail, name: cta_label, widget: string }
+          - { label: URL do CTA, name: cta_url, widget: string }

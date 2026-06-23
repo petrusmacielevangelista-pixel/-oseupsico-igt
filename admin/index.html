@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · IGT · O Seu Psico</title>
+  <link rel="icon" href="../assets/logo.png" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="admin-login" id="tela-login">
+    <div class="admin-login__card">
+      <div class="admin-login__logo">
+        <img src="../assets/logo.png" alt="logo" />
+        <span class="admin-login__logo-text">O Seu Psico <span style="color:var(--yellow-dark);">IGT</span></span>
+      </div>
+      <div class="admin-login__title">Painel Admin</div>
+      <div class="admin-login__sub">Acesso restrito à equipe O Seu Psico.</div>
+      <div class="admin-login__error" id="login-erro">Usuário ou senha incorretos.</div>
+      <form id="form-login">
+        <div class="form-group">
+          <label>Usuário</label>
+          <input type="text" id="login-user" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="login-pass" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn--yellow btn--full" style="margin-top:8px;">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PAINEL -->
+  <div class="admin-body hidden" id="tela-admin">
+
+    <nav class="admin-navbar">
+      <div class="container">
+        <div class="admin-navbar__inner">
+          <div class="admin-navbar__logo">
+            <img src="../assets/logo.png" alt="logo" />
+            <span class="admin-navbar__logo-text">O Seu Psico</span>
+            <span class="admin-navbar__badge">IGT Admin</span>
+          </div>
+          <span class="admin-logout" onclick="logout()">Sair</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="admin-main">
+      <div class="container">
+
+        <div class="admin-stats" id="admin-stats">
+          <div class="admin-stat">
+            <div class="admin-stat__num" id="stat-total">—</div>
+            <div class="admin-stat__label">Participantes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat__num" id="stat-media">—</div>
+            <div class="admin-stat__label">Escore médio (IGT)</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat__num" id="stat-vantajosos">—</div>
+            <div class="admin-stat__label">Com padrão vantajoso</div>
+          </div>
+        </div>
+
+        <div class="admin-filters">
+          <input type="text" id="filtro-busca" placeholder="Buscar por nome ou e-mail…" oninput="filtrar()" style="flex:1;min-width:200px;" />
+          <select id="filtro-classe" onchange="filtrar()">
+            <option value="">Todos os padrões</option>
+            <option value="good">Vantajoso</option>
+            <option value="moderate">Neutro</option>
+            <option value="poor">Desvantajoso</option>
+          </select>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Idade</th>
+                <th>Escore</th>
+                <th>Padrão</th>
+                <th>A</th><th>B</th><th>C</th><th>D</th>
+                <th>Saldo Final</th>
+                <th>Data</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="admin-tbody"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL DETALHE -->
+  <div class="modal-overlay" id="modal-overlay" onclick="fecharModal(event)">
+    <div class="modal">
+      <div class="modal__header">
+        <div class="modal__title" id="modal-title">Detalhes</div>
+        <button class="modal__close" onclick="fecharModal()">×</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    let TOKEN = '';
+    let registros = [];
+    let filtrados = [];
+
+    /* ── Login ── */
+    document.getElementById('form-login').addEventListener('submit', async e => {
+      e.preventDefault();
+      const usuario = document.getElementById('login-user').value.trim();
+      const senha   = document.getElementById('login-pass').value;
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, senha }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        TOKEN = data.token;
+        document.getElementById('tela-login').classList.add('hidden');
+        document.getElementById('tela-admin').classList.remove('hidden');
+        carregarDados();
+      } else {
+        document.getElementById('login-erro').classList.add('visible');
+      }
+    });
+
+    function logout() {
+      TOKEN = '';
+      document.getElementById('tela-login').classList.remove('hidden');
+      document.getElementById('tela-admin').classList.add('hidden');
+    }
+
+    /* ── Dados ── */
+    async function carregarDados() {
+      const res = await fetch('/api/admin/dados', { headers: { Authorization: `Bearer ${TOKEN}` } });
+      const data = await res.json();
+      registros = data.registros || [];
+      filtrados = registros;
+      atualizarStats();
+      renderTabela();
+    }
+
+    function atualizarStats() {
+      document.getElementById('stat-total').textContent = registros.length;
+      if (registros.length === 0) return;
+      const media = registros.reduce((s, r) => s + r.score, 0) / registros.length;
+      document.getElementById('stat-media').textContent = media.toFixed(1);
+      const bons = registros.filter(r => r.classe === 'good').length;
+      document.getElementById('stat-vantajosos').textContent = bons + ' (' + Math.round(bons/registros.length*100) + '%)';
+    }
+
+    function filtrar() {
+      const busca = document.getElementById('filtro-busca').value.toLowerCase();
+      const classe = document.getElementById('filtro-classe').value;
+      filtrados = registros.filter(r => {
+        const matchBusca = !busca || r.nome.toLowerCase().includes(busca) || r.email.toLowerCase().includes(busca);
+        const matchClasse = !classe || r.classe === classe;
+        return matchBusca && matchClasse;
+      });
+      renderTabela();
+    }
+
+    function renderTabela() {
+      const labels = { good: '✅ Vantajoso', moderate: '🟡 Neutro', poor: '🔴 Desvantajoso' };
+      const tbody = document.getElementById('admin-tbody');
+      if (filtrados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:32px;color:var(--text-light);">Nenhum registro encontrado.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = filtrados.map((r, i) => {
+        const c = JSON.parse(r.contagem || '{}');
+        const data = r.criado_em ? r.criado_em.split('T')[0] : '—';
+        return `<tr>
+          <td><strong>${r.nome}</strong></td>
+          <td style="color:var(--text-mid);">${r.email}</td>
+          <td>${r.idade || '—'}</td>
+          <td><strong style="color:${r.score >= 10 ? '#22C55E' : r.score >= -10 ? '#EAB308' : '#EF4444'}">${r.score >= 0 ? '+' : ''}${r.score}</strong></td>
+          <td style="font-size:0.82rem;">${labels[r.classe] || r.faixa}</td>
+          <td>${c.A||0}</td><td>${c.B||0}</td><td>${c.C||0}</td><td>${c.D||0}</td>
+          <td>R$ ${(r.saldo_final||0).toLocaleString('pt-BR')}</td>
+          <td style="color:var(--text-light);font-size:0.82rem;">${data}</td>
+          <td><button class="admin-table__btn" onclick="abrirModal(${i})">Ver</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    /* ── Modal ── */
+    function abrirModal(idx) {
+      const r = filtrados[idx];
+      const c = JSON.parse(r.contagem || '{}');
+      const labels = { good: '✅ Vantajoso', moderate: '🟡 Neutro', poor: '🔴 Desvantajoso' };
+      document.getElementById('modal-title').textContent = r.nome;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="modal__row"><strong>E-mail</strong><span>${r.email}</span></div>
+        <div class="modal__row"><strong>Idade</strong><span>${r.idade || '—'}</span></div>
+        <div class="modal__row"><strong>Escolaridade</strong><span>${r.escolaridade || '—'}</span></div>
+        <div class="modal__divider"></div>
+        <div class="modal__row"><strong>Escore IGT</strong><span style="font-weight:700;">${r.score >= 0 ? '+' : ''}${r.score}</span></div>
+        <div class="modal__row"><strong>Padrão</strong><span>${labels[r.classe] || r.faixa}</span></div>
+        <div class="modal__row"><strong>Saldo final</strong><span>R$ ${(r.saldo_final||0).toLocaleString('pt-BR')}</span></div>
+        <div class="modal__divider"></div>
+        <div class="modal__row"><strong>Baralho A</strong><span>${c.A||0} escolhas</span></div>
+        <div class="modal__row"><strong>Baralho B</strong><span>${c.B||0} escolhas</span></div>
+        <div class="modal__row"><strong>Baralho C</strong><span>${c.C||0} escolhas</span></div>
+        <div class="modal__row"><strong>Baralho D</strong><span>${c.D||0} escolhas</span></div>
+        <div class="modal__divider"></div>
+        <div class="modal__row"><strong>Data</strong><span>${r.criado_em || '—'}</span></div>
+      `;
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function fecharModal(e) {
+      if (!e || e.target === document.getElementById('modal-overlay')) {
+        document.getElementById('modal-overlay').classList.remove('open');
+      }
+    }
+  </script>
+</body>
+</html>
