@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: petrusmacielevangelista-pixel/oseupsico-igt
+  repo: petrusmacielevangelista-pixel/-oseupsico-igt
   branch: master
   base_url: https://igt.oseupsico.com.br
 
