@@ -71,7 +71,10 @@ function escolherBaralho(deck) {
   if (state.tentativa >= TOTAL_TRIALS) {
     setTimeout(finalizarTarefa, 1400);
   } else {
-    setTimeout(() => { state.bloqueado = false; }, 900);
+    setTimeout(() => {
+      state.bloqueado = false;
+      atualizarUI();
+    }, 900);
   }
 }
 
@@ -90,6 +93,12 @@ function atualizarUI() {
   ['A','B','C','D'].forEach(d => {
     const el = document.getElementById(`deck-count-${d}`);
     if (el) el.textContent = state.contagem[d];
+  });
+
+  // Habilita/desabilita baralhos
+  ['A','B','C','D'].forEach(d => {
+    const btn = document.getElementById('deck-' + d);
+    if (btn) btn.disabled = state.bloqueado || state.tentativa >= TOTAL_TRIALS;
   });
 
   // Histórico (últimas 20)

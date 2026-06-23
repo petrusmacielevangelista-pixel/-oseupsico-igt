@@ -96,24 +96,12 @@
       }
     })();
 
-    // Integra barra de progresso com a lógica do igt.js
+    // Atualiza barra de progresso após cada escolha
     const _origAtualizarUI = window.atualizarUI;
-    function atualizarUIComProgresso() {
+    window.atualizarUI = function() {
+      _origAtualizarUI();
       const fill = document.getElementById('progress-fill');
       if (fill) fill.style.width = (state.tentativa / 100 * 100) + '%';
-
-      // Desabilita baralhos durante o bloqueio
-      ['A','B','C','D'].forEach(d => {
-        const btn = document.getElementById('deck-' + d);
-        if (btn) btn.disabled = state.bloqueado;
-      });
-    }
-
-    // Patch: após cada escolha, atualiza progresso também
-    const _orig = window.escolherBaralho;
-    window.escolherBaralho = function(deck) {
-      _orig(deck);
-      setTimeout(atualizarUIComProgresso, 50);
     };
   </script>
 </body>
