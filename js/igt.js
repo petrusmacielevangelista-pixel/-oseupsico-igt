@@ -122,9 +122,11 @@ function mostrarFeedback(gain, penalty, net) {
   el.className = 'igt-feedback__msg';
   void el.offsetWidth; // força reflow para reiniciar transição CSS
 
-  let linhas = `<div style="color:#22C55E;font-size:1.6rem;font-weight:800;line-height:1.2;">+R$ ${gain.toLocaleString('pt-BR')}</div>`;
+  let linhas;
   if (penalty > 0) {
-    linhas += `<div style="color:#EF4444;font-size:1.6rem;font-weight:800;line-height:1.2;margin-top:4px;">−R$ ${penalty.toLocaleString('pt-BR')}</div>`;
+    linhas = `<div style="color:#EF4444;font-size:1.6rem;font-weight:800;line-height:1.2;">−R$ ${penalty.toLocaleString('pt-BR')}</div>`;
+  } else {
+    linhas = `<div style="color:#22C55E;font-size:1.6rem;font-weight:800;line-height:1.2;">+R$ ${gain.toLocaleString('pt-BR')}</div>`;
   }
 
   el.innerHTML = linhas;
