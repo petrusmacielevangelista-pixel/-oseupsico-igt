@@ -111,23 +111,28 @@ function atualizarUI() {
   }
 }
 
+let _feedbackTimeout = null;
+
 function mostrarFeedback(gain, penalty, net) {
   const el = document.getElementById('feedback-msg');
   if (!el) return;
 
-  let linhas = '';
+  // Cancela timeout anterior e reseta animação
+  if (_feedbackTimeout) clearTimeout(_feedbackTimeout);
+  el.className = 'igt-feedback__msg';
+  void el.offsetWidth; // força reflow para reiniciar transição CSS
 
-  // Linha de ganho (sempre verde)
-  linhas += `<div style="color:#22C55E;font-size:1.6rem;font-weight:800;line-height:1.2;">+R$ ${gain.toLocaleString('pt-BR')}</div>`;
-
-  // Linha de perda (vermelho, só se houver)
+  let linhas = `<div style="color:#22C55E;font-size:1.6rem;font-weight:800;line-height:1.2;">+R$ ${gain.toLocaleString('pt-BR')}</div>`;
   if (penalty > 0) {
     linhas += `<div style="color:#EF4444;font-size:1.6rem;font-weight:800;line-height:1.2;margin-top:4px;">−R$ ${penalty.toLocaleString('pt-BR')}</div>`;
   }
 
   el.innerHTML = linhas;
-  el.className = `igt-feedback__msg show`;
-  setTimeout(() => { el.className = `igt-feedback__msg`; }, 800);
+  el.className = 'igt-feedback__msg show';
+  _feedbackTimeout = setTimeout(() => {
+    el.className = 'igt-feedback__msg';
+    _feedbackTimeout = null;
+  }, 800);
 }
 
 /* ── Calcular resultado final ── */
