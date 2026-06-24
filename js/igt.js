@@ -74,7 +74,7 @@ function escolherBaralho(deck) {
     setTimeout(() => {
       state.bloqueado = false;
       atualizarUI();
-    }, 450);
+    }, 900);
   }
 }
 
@@ -115,18 +115,19 @@ function mostrarFeedback(gain, penalty, net) {
   const el = document.getElementById('feedback-msg');
   if (!el) return;
 
-  let texto, classe;
-  if (penalty === 0) {
-    texto = `+R$ ${gain}`;
-    classe = 'gain';
-  } else {
-    texto = `+R$ ${gain} &nbsp;−R$ ${penalty} &nbsp;<span class="${net >= 0 ? 'net-gain' : 'net-loss'}">(${net >= 0 ? '+' : ''}R$ ${net})</span>`;
-    classe = 'loss';
+  let linhas = '';
+
+  // Linha de ganho (sempre verde)
+  linhas += `<div style="color:#22C55E;font-size:1.6rem;font-weight:800;line-height:1.2;">+R$ ${gain.toLocaleString('pt-BR')}</div>`;
+
+  // Linha de perda (vermelho, só se houver)
+  if (penalty > 0) {
+    linhas += `<div style="color:#EF4444;font-size:1.6rem;font-weight:800;line-height:1.2;margin-top:4px;">−R$ ${penalty.toLocaleString('pt-BR')}</div>`;
   }
 
-  el.innerHTML = texto;
-  el.className = `igt-feedback__msg ${classe} show`;
-  setTimeout(() => { el.className = `igt-feedback__msg ${classe}`; }, 400);
+  el.innerHTML = linhas;
+  el.className = `igt-feedback__msg show`;
+  setTimeout(() => { el.className = `igt-feedback__msg`; }, 800);
 }
 
 /* ── Calcular resultado final ── */
