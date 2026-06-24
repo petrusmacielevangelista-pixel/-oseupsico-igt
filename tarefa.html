@@ -21,22 +21,13 @@
     </div>
   </nav>
 
-  <!-- Barra de saldo e progresso -->
+  <!-- Barra de saldo -->
   <div class="igt-header">
     <div class="container">
       <div class="igt-header__inner">
         <div class="igt-balance">
           <span class="igt-balance__label">Saldo</span>
           <span class="igt-balance__value" id="saldo">R$ 2.000</span>
-        </div>
-        <div class="igt-trials">
-          Tentativa <strong><span id="trial-count">0</span></strong> de <strong>100</strong>
-        </div>
-        <!-- Barra de progresso embutida -->
-        <div style="flex:1;max-width:240px;">
-          <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius-full);height:6px;overflow:hidden;">
-            <div id="progress-fill" style="height:100%;background:var(--yellow);border-radius:var(--radius-full);width:0%;transition:width 0.3s;"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -87,13 +78,6 @@
       }
     })();
 
-    // Atualiza barra de progresso após cada escolha
-    const _origAtualizarUI = window.atualizarUI;
-    window.atualizarUI = function() {
-      _origAtualizarUI();
-      const fill = document.getElementById('progress-fill');
-      if (fill) fill.style.width = (state.tentativa / 100 * 100) + '%';
-    };
   </script>
 </body>
 </html>

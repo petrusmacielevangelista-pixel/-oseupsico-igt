@@ -74,7 +74,7 @@ function escolherBaralho(deck) {
     setTimeout(() => {
       state.bloqueado = false;
       atualizarUI();
-    }, 900);
+    }, 450);
   }
 }
 
@@ -126,7 +126,7 @@ function mostrarFeedback(gain, penalty, net) {
 
   el.innerHTML = texto;
   el.className = `igt-feedback__msg ${classe} show`;
-  setTimeout(() => { el.className = `igt-feedback__msg ${classe}`; }, 800);
+  setTimeout(() => { el.className = `igt-feedback__msg ${classe}`; }, 400);
 }
 
 /* ── Calcular resultado final ── */
