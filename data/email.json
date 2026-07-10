@@ -1,0 +1,9 @@
+{
+  "from": "O Seu Psico IGT <igt@oseupsico.com.br>",
+  "assunto": "Seu resultado do Iowa Gambling Task · O Seu Psico",
+  "msg_good": "Seu padrão de escolhas foi predominantemente vantajoso. Você tendeu a preferir os baralhos C e D, demonstrando sensibilidade às consequências futuras e aprendizado das contingências do ambiente.",
+  "msg_moderate": "Seu padrão de escolhas foi misto, sem preferência clara por baralhos vantajosos ou desvantajosos.",
+  "msg_poor": "Seu padrão de escolhas foi predominantemente desvantajoso. Você tendeu a preferir os baralhos A e B, com ganhos altos mas perdas elevadas.",
+  "cta_label": "Falar com um psicólogo no WhatsApp",
+  "cta_url": "https://wa.me/5511945556826"
+}

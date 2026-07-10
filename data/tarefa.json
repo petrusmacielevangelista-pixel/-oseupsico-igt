@@ -1,0 +1,4 @@
+{
+  "instrucao": "À sua frente estão quatro baralhos: A, B, C e D. Selecione uma carta por vez, de qualquer baralho que desejar. Cada vez que selecionar uma carta, você ganhará uma quantia em dinheiro. Ocasionalmente, ao selecionar uma carta, você também perderá dinheiro. Tente ganhar o máximo possível e evite perder. Você pode escolher de qualquer baralho, quantas vezes quiser e na ordem que preferir. Você não saberá com antecedência quantas cartas deverá virar. O objetivo é terminar com o maior saldo possível.",
+  "saldo_inicial": 2000
+}

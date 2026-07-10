@@ -1,0 +1,9 @@
+{
+  "interpretacao_good": "Seu padrão de escolhas foi predominantemente vantajoso: você tendeu a preferir os baralhos C e D, que oferecem ganhos menores mas perdas controladas. Esse padrão é consistente com sensibilidade às consequências futuras e aprendizado das contingências do ambiente ao longo da tarefa.",
+  "interpretacao_moderate": "Seu padrão de escolhas foi misto, sem preferência clara por baralhos vantajosos ou desvantajosos. Isso pode refletir exploração dos baralhos, dificuldade em identificar padrões ou influência de outros fatores como atenção e estratégia.",
+  "interpretacao_poor": "Seu padrão de escolhas foi predominantemente desvantajoso: você tendeu a preferir os baralhos A e B, que oferecem ganhos altos mas perdas elevadas. Esse padrão pode refletir preferência por recompensas imediatas em detrimento das consequências futuras.",
+  "cta": {
+    "texto": "Conhecer os psicólogos →",
+    "url": "https://oseupsico.com.br"
+  }
+}

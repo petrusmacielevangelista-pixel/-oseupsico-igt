@@ -1,0 +1,22 @@
+{
+  "hero": {
+    "titulo": "Iowa Gambling Task (IGT)",
+    "subtitulo": "Uma tarefa clássica da neuropsicologia para avaliar como você toma decisões sob incerteza — um processo fundamental às funções executivas.",
+    "cta_texto": "Começar agora →",
+    "disclaimer": "Instrumento de pesquisa. Não constitui diagnóstico clínico. Suas respostas são confidenciais."
+  },
+  "cards": [
+    { "icone": "🃏", "titulo": "4 baralhos", "texto": "Você escolherá cartas de quatro baralhos (A, B, C e D). Cada carta traz um ganho de dinheiro fictício e, às vezes, uma perda." },
+    { "icone": "🔁", "titulo": "100 tentativas", "texto": "A tarefa tem 100 escolhas no total. Não há tempo limite por carta — escolha no seu próprio ritmo." },
+    { "icone": "📊", "titulo": "Resultado ao final", "texto": "Ao terminar, você verá seu escore IGT e uma interpretação sobre seu padrão de tomada de decisão. O resultado também é enviado por e-mail." }
+  ],
+  "como_funciona": {
+    "titulo": "Como funciona?",
+    "texto": "Você começa com R$ 2.000 (fictícios). A cada rodada, escolhe um baralho. Alguns baralhos parecem vantajosos a curto prazo, mas levam a perdas a longo prazo. O objetivo é maximizar o saldo — mas as regras não são explicadas: você deve descobri-las pelo comportamento. Isso é justamente o que o IGT avalia."
+  },
+  "por_que": {
+    "titulo": "Por que o IGT importa?",
+    "texto": "Desenvolvido por Bechara, Damasio et al. (1994), o Iowa Gambling Task é um dos instrumentos mais utilizados na neuropsicologia para avaliar a tomada de decisão. Diferenças no desempenho são observadas em populações com lesão no córtex pré-frontal ventromedial, uso de substâncias, comportamentos compulsivos e outros quadros clínicos.",
+    "referencia": "Bechara, A., Damasio, A. R., Damasio, H., & Anderson, S. W. (1994). Insensitivity to future consequences following damage to human prefrontal cortex. Cognition, 50(1-3), 7-15."
+  }
+}
