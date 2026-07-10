@@ -12,7 +12,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="/" class="navbar__logo">
+        <a href="/igt/" class="navbar__logo">
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="navbar__logo-text">O Seu Psico<span></span></span>
           <span class="navbar__badge">IGT</span>
@@ -64,12 +64,15 @@
           Os resultados aqui apresentados <strong>não constituem diagnóstico clínico</strong>
           e não substituem avaliação por psicólogo ou médico. Muitos fatores influenciam
           o desempenho nesta tarefa, incluindo atenção, fadiga e familiaridade com jogos.
+          O escore é classificado com base no Net Score (C+D)−(A+B): acima de +10 (vantajoso),
+          entre −10 e +10 (neutro), abaixo de −10 (desvantajoso), conforme critério adotado
+          com base na literatura (Bechara et al., 1994).
         </p>
       </div>
 
       <div class="result-actions">
         <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg">Conhecer os psicólogos →</a>
-        <a href="/" class="btn btn--outline">Realizar novamente</a>
+        <a href="/igt/" class="btn btn--outline">Realizar novamente</a>
       </div>
 
     </div>
@@ -97,10 +100,10 @@
     document.getElementById('ano').textContent = new Date().getFullYear();
 
     const raw = sessionStorage.getItem('psico_igt_resultado');
-    if (!raw) { window.location.href = '/'; }
+    if (!raw) { window.location.href = '/igt/'; }
 
     const dados = JSON.parse(raw);
-    const { nome, email, escolaridade, idade, score, faixa, classe, contagem, saldoFinal } = dados;
+    const { nome, email, escolaridade, idade, score, faixa, classe, contagem, quintos, saldoFinal } = dados;
 
     // Preenche UI
     document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
@@ -114,7 +117,7 @@
     faixaEl.className = 'result-faixa ' + classe;
 
     const interpretacoes = {
-      good: 'Seu padrão de escolhas foi predominantemente vantajoso: você tendeu a preferir os baralhos C e D, que oferecem ganhos menores mas perdas controladas. Esse padrão é consistente com boa regulação emocional na tomada de decisão e sensibilidade às consequências futuras.',
+      good: 'Seu padrão de escolhas foi predominantemente vantajoso: você tendeu a preferir os baralhos C e D, que oferecem ganhos menores mas perdas controladas. Esse padrão é consistente com sensibilidade às consequências futuras e aprendizado das contingências do ambiente ao longo da tarefa.',
       moderate: 'Seu padrão de escolhas foi misto, sem preferência clara por baralhos vantajosos ou desvantajosos. Isso pode refletir exploração dos baralhos, dificuldade em identificar padrões ou influência de outros fatores como atenção e estratégia.',
       poor: 'Seu padrão de escolhas foi predominantemente desvantajoso: você tendeu a preferir os baralhos A e B, que oferecem ganhos altos mas perdas elevadas. Esse padrão pode refletir preferência por recompensas imediatas em detrimento das consequências futuras.',
     };
@@ -141,10 +144,10 @@
     const loading = document.getElementById('loading');
     loading.classList.add('visible');
 
-    fetch('/api/resultado-igt', {
+    fetch('/igt/api/resultado-igt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, email, escolaridade, idade, score, faixa, classe, contagem, saldoFinal }),
+      body: JSON.stringify({ nome, email, escolaridade, idade, score, faixa, classe, contagem, quintos, saldoFinal }),
     })
     .catch(() => {})
     .finally(() => { loading.classList.remove('visible'); });

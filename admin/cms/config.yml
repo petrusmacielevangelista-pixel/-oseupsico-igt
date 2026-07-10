@@ -2,7 +2,7 @@ backend:
   name: github
   repo: petrusmacielevangelista-pixel/-oseupsico-igt
   branch: master
-  base_url: https://igt.oseupsico.com.br
+  base_url: https://oseupsico.com.br/igt
 
 media_folder: assets
 public_folder: /assets

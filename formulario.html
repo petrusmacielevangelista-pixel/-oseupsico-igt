@@ -12,12 +12,12 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="/" class="navbar__logo">
+        <a href="/igt/" class="navbar__logo">
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="navbar__logo-text">O Seu Psico<span></span></span>
           <span class="navbar__badge">IGT</span>
         </a>
-        <a href="/" class="navbar__back">← Voltar</a>
+        <a href="/igt/" class="navbar__back">← Voltar</a>
       </div>
     </div>
   </nav>
@@ -120,7 +120,7 @@
       if (!ok) return;
 
       sessionStorage.setItem('psico_igt_cadastro', JSON.stringify({ nome, idade, email, escolaridade }));
-      window.location.href = '/instrucoes.html';
+      window.location.href = '/igt/instrucoes.html';
     });
   </script>
 </body>

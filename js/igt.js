@@ -25,7 +25,7 @@ const SCHEDULES = {
   },
   C: {
     gain: 50,
-    penalties: [0,50,0,0,0,25,0,0,75,0],  // total = 150 → net = 500-150 = +250
+    penalties: [0,50,0,50,0,25,0,50,75,0],  // total = 250 → net = 500-250 = +250
   },
   D: {
     gain: 50,
@@ -179,7 +179,7 @@ function finalizarTarefa() {
     historico: state.historico,
   }));
 
-  window.location.href = '/resultado.html';
+  window.location.href = '/igt/resultado.html';
 }
 
 /* ── Init ── */

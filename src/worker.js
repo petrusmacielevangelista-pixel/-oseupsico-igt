@@ -24,12 +24,16 @@ function corClasse(classe) {
   return { good: '#22C55E', moderate: '#EAB308', poor: '#EF4444' }[classe] || '#888';
 }
 
+const WHATSAPP_NUMERO = '5511945556826';
+
 function gerarHTML({ nome, email, score, faixa, classe, contagem, saldoFinal }) {
   const cor = corClasse(classe);
   const scoreStr = (score >= 0 ? '+' : '') + score;
+  const waMsg = encodeURIComponent('Olá! Acabei de fazer o Iowa Gambling Task (IGT) no O Seu Psico e gostaria de conversar com um psicólogo.');
+  const waLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${waMsg}`;
 
   const interpretacoes = {
-    good: 'Seu padrão de escolhas foi predominantemente vantajoso. Você tendeu a preferir os baralhos C e D, sensível às consequências a longo prazo.',
+    good: 'Seu padrão de escolhas foi predominantemente vantajoso. Você tendeu a preferir os baralhos C e D, demonstrando sensibilidade às consequências futuras e aprendizado das contingências do ambiente.',
     moderate: 'Seu padrão de escolhas foi misto, sem preferência clara por baralhos vantajosos ou desvantajosos.',
     poor: 'Seu padrão de escolhas foi predominantemente desvantajoso. Você tendeu a preferir os baralhos A e B, com ganhos altos mas perdas elevadas.',
   };
@@ -99,8 +103,8 @@ function gerarHTML({ nome, email, score, faixa, classe, contagem, saldoFinal }) 
             <!-- CTA -->
             <table cellpadding="0" cellspacing="0">
               <tr>
-                <td style="background:#F5C518;border-radius:40px;padding:14px 28px;">
-                  <a href="https://oseupsico.com.br" style="font-size:15px;font-weight:700;color:#1A1A1A;text-decoration:none;">Conhecer os psicólogos →</a>
+                <td style="background:#25D366;border-radius:40px;padding:14px 28px;">
+                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 Falar com um psicólogo no WhatsApp →</a>
                 </td>
               </tr>
             </table>
@@ -141,14 +145,22 @@ async function enviarEmail(env, para, nome, dados) {
 
 async function initDB(db) {
   await db.prepare(
-    `CREATE TABLE IF NOT EXISTS participantes_igt (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, escolaridade TEXT, idade INTEGER, score INTEGER NOT NULL, faixa TEXT NOT NULL, classe TEXT NOT NULL, contagem TEXT NOT NULL, saldo_final INTEGER NOT NULL, criado_em TEXT DEFAULT (datetime('now')))`
+    `CREATE TABLE IF NOT EXISTS participantes_igt (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, escolaridade TEXT, idade INTEGER, score INTEGER NOT NULL, faixa TEXT NOT NULL, classe TEXT NOT NULL, contagem TEXT NOT NULL, quintos TEXT, saldo_final INTEGER NOT NULL, criado_em TEXT DEFAULT (datetime('now')))`
   ).run();
 }
+
+/* Este Worker é servido sob o prefixo /igt (oseupsico.com.br/igt/*).
+   Removemos o prefixo do pathname logo no início para que o resto da
+   lógica (comparações de rota e busca de assets estáticos) continue
+   igual, sem precisar reescrever cada comparação abaixo. */
+const PREFIX = '/igt';
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const { pathname } = url;
+    const pathname = url.pathname.startsWith(PREFIX)
+      ? (url.pathname.slice(PREFIX.length) || '/')
+      : url.pathname;
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS });
@@ -159,7 +171,7 @@ export default {
       const params = new URLSearchParams({
         client_id: env.GITHUB_CLIENT_ID,
         scope: 'repo,user',
-        redirect_uri: `${url.origin}/callback`,
+        redirect_uri: `${url.origin}${PREFIX}/callback`,
       });
       return Response.redirect(`https://github.com/login/oauth/authorize?${params}`, 302);
     }
@@ -189,13 +201,13 @@ export default {
     if (pathname === '/api/resultado-igt' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const { nome, email, escolaridade, idade, score, faixa, classe, contagem, saldoFinal } = body;
+        const { nome, email, escolaridade, idade, score, faixa, classe, contagem, quintos, saldoFinal } = body;
 
         await initDB(env.DB);
         await env.DB.prepare(
-          `INSERT INTO participantes_igt (nome, email, escolaridade, idade, score, faixa, classe, contagem, saldo_final)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        ).bind(nome, email, escolaridade || '', idade || 0, score, faixa, classe, JSON.stringify(contagem), saldoFinal).run();
+          `INSERT INTO participantes_igt (nome, email, escolaridade, idade, score, faixa, classe, contagem, quintos, saldo_final)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).bind(nome, email, escolaridade || '', idade || 0, score, faixa, classe, JSON.stringify(contagem), JSON.stringify(quintos || []), saldoFinal).run();
 
         await enviarEmail(env, email, nome, { score, faixa, classe, contagem, saldoFinal });
 
@@ -231,6 +243,23 @@ export default {
       return json({ ok: true, registros: results });
     }
 
-    return env.ASSETS.fetch(request);
+    // Serve assets estáticos usando o pathname sem o prefixo /igt,
+    // já que os arquivos vivem na raiz do diretório de assets do projeto.
+    const assetUrl = new URL(request.url);
+    assetUrl.pathname = pathname;
+    const assetRes = await env.ASSETS.fetch(new Request(assetUrl, request));
+
+    // Corrige o Location de redirects gerados pelo Assets (ex.: de
+    // "/formulario.html" para "/formulario"), que viriam sem o prefixo /igt.
+    if (assetRes.status >= 300 && assetRes.status < 400) {
+      const location = assetRes.headers.get('Location');
+      if (location && location.startsWith('/') && !location.startsWith(PREFIX)) {
+        const headers = new Headers(assetRes.headers);
+        headers.set('Location', PREFIX + location);
+        return new Response(assetRes.body, { status: assetRes.status, headers });
+      }
+    }
+
+    return assetRes;
   },
 };
