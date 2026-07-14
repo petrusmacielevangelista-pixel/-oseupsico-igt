@@ -158,6 +158,13 @@ const PREFIX = '/igt';
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Sem a barra final, os caminhos relativos do HTML resolveriam para
+    // fora de /igt. Redireciona /igt -> /igt/ antes de qualquer outra coisa.
+    if (url.pathname === PREFIX) {
+      return Response.redirect(`${url.origin}${PREFIX}/${url.search}`, 301);
+    }
+
     const pathname = url.pathname.startsWith(PREFIX)
       ? (url.pathname.slice(PREFIX.length) || '/')
       : url.pathname;
@@ -184,13 +191,20 @@ export default {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET, code }),
       });
-      const { access_token, error } = await tokenRes.json();
-      if (error || !access_token) return new Response('Erro ao obter token.', { status: 500 });
+      const tokenData = await tokenRes.json();
+      const { access_token, error, error_description } = tokenData;
+      if (error || !access_token) {
+        return new Response(`Erro ao obter token: ${error || 'sem access_token'} — ${error_description || JSON.stringify(tokenData)}`, { status: 500 });
+      }
       const content = JSON.stringify({ token: access_token, provider: 'github' });
       const html = `<!DOCTYPE html><html><body><script>
         (function(){
-          function cb(e){ window.opener.postMessage('authorization:github:success:${content.replace(/'/g,"\\'")}', e.origin); }
-          window.addEventListener('message', cb, false);
+          if (!window.opener) { document.body.textContent = 'Autenticado. Pode fechar esta janela.'; return; }
+          function receiveMessage(e){
+            window.opener.postMessage('authorization:github:success:${content.replace(/'/g,"\\'")}', e.origin);
+            window.close();
+          }
+          window.addEventListener('message', receiveMessage, false);
           window.opener.postMessage('authorizing:github', '*');
         })();
       </script></body></html>`;
@@ -231,7 +245,9 @@ export default {
     if (pathname === '/api/admin/dados' && request.method === 'GET') {
       const auth = request.headers.get('Authorization') || '';
       const token = auth.replace('Bearer ', '');
-      if (!token || !token.includes(env.ADMIN_PASS)) {
+      let tokenDecodificado = '';
+      try { tokenDecodificado = atob(token); } catch {}
+      if (!token || !tokenDecodificado.includes(env.ADMIN_PASS)) {
         return json({ ok: false }, 401);
       }
 
